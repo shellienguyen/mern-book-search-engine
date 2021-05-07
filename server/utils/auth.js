@@ -1,39 +1,50 @@
-const jwt = require('jsonwebtoken');
+const jwt = require( 'jsonwebtoken' );
 
-// set token secret and expiration date
+// Set token secret and expiration date
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
+
 module.exports = {
-  // function for our authenticated routes
-  authMiddleware: function (req, res, next) {
-    // allows token to be sent via  req.query or headers
-    let token = req.query.token || req.headers.authorization;
+   /* The signToken() function expects a user object and will add that user's
+   username, email, and _id properties to the token. Optionally, tokens can
+   be given an expiration date and a secret to sign the token with. Note that
+   the secret has nothing to do with encoding. The secret merely enables the
+   server to verify whether it recognizes this token. */
+   signToken: function({ username, email, _id }) {
+      const payload = { username, email, _id };
 
-    // ["Bearer", "<tokenvalue>"]
-    if (req.headers.authorization) {
-      token = token.split(' ').pop().trim();
-    }
+      return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
+   },
 
-    if (!token) {
-      return res.status(400).json({ message: 'You have no token!' });
-    }
+   // Function for authenticated routes
+   authMiddleware: function ( req, res, next ) {
+      // allows token to be sent via req.query or headers
+      // let token = req.query.token || req.headers.authorization;
+      let token = req.body.token || req.query.token || req.headers.authorization;
 
-    // verify token and get user data out of it
-    try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
-    } catch {
-      console.log('Invalid token');
-      return res.status(400).json({ message: 'invalid token!' });
-    }
+      // Separate ["Bearer", "<tokenvalue>"]
+      if ( req.headers.authorization ) {
+         token = token.split( ' ' ).pop().trim();
+      };
 
-    // send to next endpoint
-    next();
-  },
-  signToken: function ({ username, email, _id }) {
-    const payload = { username, email, _id };
+      if ( !token ) {
+         //return res.status( 400 ).json({ message: 'You have no token!' });
+         return ( req );
+      };
 
-    return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
-  },
+      // Verify token and get user data out of it
+      try {
+         const { data } = jwt.verify( token, secret, { maxAge: expiration });
+         req.user = data;
+       }
+       catch {
+          console.log( 'Invalid token!' );
+          //return res.status( 400 ).json({ message: 'Invalid token!' });
+       }
+
+       return req;
+      // send to next endpoint
+      //next();
+   }
 };
