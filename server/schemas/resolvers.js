@@ -30,19 +30,34 @@ const resolvers = {
          return { token, user };
       },
       login: async( parent, { email, password } ) => {
+         console.log( 'resolvers.js' );
+
          const user = await User.findOne({ email });
 
+         console.log( 'resolvers.js' );
+         console.log( 'email: ' + email );
+         console.log( 'password: ' + password );
+
          if ( !user ) {
+            console.log( 'resolvers.js if( !user )' );
             throw new AuthenticationError( 'Incorrect credentials deteced!' );
          };
 
          const correctPassword = await user.isCorrectPassword( password );
 
+         console.log( 'correctPassword: ' );
+         console.log( correctPassword );
+
          if ( !correctPassword ) {
+            console.log( 'resolvers.js if( !correctPassword )' );
             throw new AuthenticationError( 'Incorrect credentials detected!' );
          };
 
          const token = signToken( user );
+
+         console.log( 'resolvers.js' );
+         console.log( 'token: ' + token );
+
          return { token, user };
       },
       saveBook: async( parent, args, context ) => {
