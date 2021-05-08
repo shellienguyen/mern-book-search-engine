@@ -15,28 +15,37 @@ const LoginForm = () => {
    const handleInputChange = ( event ) => {
       const { name, value } = event.target;
 
-console.log( 'LoginForm.js handleInputChange' );
+      console.log( 'LoginForm.js handleInputChange' );
 
       setUserFormData({ ...userFormData, [ name ]: value });
-console.log( 'name: ' + name );
-console.log( 'value: ' + value );
+
+      console.log( 'name: ' + name );
+      console.log( 'value: ' + value );
    };
 
    
    const handleFormSubmit = async ( event ) => {
       event.preventDefault();
-console.log( 'LoginForm.js before try' );
+
+      console.log( 'LoginForm.js before try' );
+      console.log( 'validated: ' );
+      console.log( validated );
       
       try {
-console.log( 'LoginForm.js inside try' );
+         console.log( 'LoginForm.js inside try' );
+
          const { data } = await loginUser({ variables: { ...userFormData }});
-console.log( data );
-console.log( data.login.token );
+
+         console.log( data );
+         console.log( data.login.token );
+
          Auth.login( data.login.token );
       }
       catch ( err ) {
-console.log( 'LoginForm.js catch' );
+         console.log( 'LoginForm.js catch' );
+
          console.error( err );
+         setShowAlert( true );
       };
 
       setUserFormData({ username: '', email: '', password: '', });

@@ -21,21 +21,37 @@ const SignupForm = () => {
    
    const handleInputChange = ( event ) => {
       const { name, value } = event.target;
+
+      console.log( 'SignupForm.js handleInputChange' );
+
       setUserFormData({ ...userFormData, [ name ]: value });
+
+      console.log( 'name: ' + name );
+      console.log( 'value: ' + value );
    };
 
    const handleFormSubmit = async ( event ) => {
       event.preventDefault();
 
+      console.log( 'SignupForm.js before try' );
+      console.log( 'validated: ' );
+      console.log( validated );
+      
       try {
+         console.log( 'SignupForm.js inside try' );
+
          // Execute addUser mutation, pass in data from the form
          const { data } = await addUser({
             variables: { ...userFormData }
          });
 
+         console.log( data );
+         console.log( data.addUser.token );
+
          Auth.login( data.addUser.token );
       }
       catch ( err ) {
+         console.log( 'SignupForm.js catch' );
          console.error( err );
          setShowAlert( true );
       };
