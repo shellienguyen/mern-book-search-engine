@@ -33,7 +33,7 @@ const LoginForm = () => {
       
       try {
          console.log( 'LoginForm.js inside try' );
-
+//debugger;
          const { data } = await loginUser({ variables: { ...userFormData }});
 
          console.log( data );
@@ -45,7 +45,7 @@ const LoginForm = () => {
          console.log( 'LoginForm.js catch' );
 
          console.error( err );
-         setShowAlert( true );
+         //setShowAlert( true );
       };
 
       setUserFormData({ username: '', email: '', password: '', });

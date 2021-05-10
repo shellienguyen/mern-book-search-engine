@@ -9,7 +9,7 @@ import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
    const { loading, data } = useQuery( GET_ME );
-   const [ removeBook, { error } ] = useMutation( REMOVE_BOOK );
+   const [ removeBook ] = useMutation( REMOVE_BOOK );
    const userData = data?.me || [];
 
    // Create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -32,7 +32,7 @@ const SavedBooks = () => {
    };
 
   // If still waiting for data
-   if ( !loading ) {
+   if ( loading ) {
       return <h2>LOADING...</h2>;
    };
 
@@ -49,7 +49,7 @@ const SavedBooks = () => {
             {userData.savedBooks.length
                ? `Viewing ${userData.savedBooks.length} saved
                   ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
-               : 'You have no saved books!'}
+               : 'You can start saving books to your book library!'}
          </h2>
         
          <CardColumns>
@@ -63,8 +63,7 @@ const SavedBooks = () => {
                         <Card.Title>{book.title}</Card.Title>
                         <p className='small'>Authors: {book.authors}</p>
                         <Card.Text>{book.description}</Card.Text>
-                        <Button className='btn-block btn-danger'
-                                onClick={() => handleDeleteBook(book.bookId)}>
+                        <Button className='btn-block btn-danger' onClick={() => handleDeleteBook( book.bookId )}>
                            Delete this Book!
                         </Button>
                      </Card.Body>

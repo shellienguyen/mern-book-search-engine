@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import { SAVE_BOOK } from '../utils/mutations';
 import { useMutation } from '@apollo/react-hooks';
@@ -16,7 +16,7 @@ const SearchBooks = () => {
    // Create state to hold saved bookId values
    const [ savedBookIds, setSavedBookIds ] = useState( getSavedBookIds() );
 
-   const [ saveBook, { error }] = useMutation( SAVE_BOOK );
+   const [ saveBook ] = useMutation( SAVE_BOOK );
 
    // Set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
    // Learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -36,14 +36,14 @@ const SearchBooks = () => {
          const response = await searchGoogleBooks( searchInput );
 
          if ( !response.ok ) {
-            throw new Error( 'An Error Has Occurred!' );
+            throw new Error( 'An Error was Detected!' );
          };
 
          const { items } = await response.json();
 
          const bookData = items.map(( book ) => ({
             bookId: book.id,
-            authors: book.volumeInfo.authors || [ 'Author not available!' ],
+            authors: book.volumeInfo.authors || [ 'The Author is not Available!' ],
             title: book.volumeInfo.title,
             description: book.volumeInfo.description,
             image: book.volumeInfo.imageLinks?.thumbnail || '',
@@ -86,7 +86,7 @@ const SearchBooks = () => {
       <>
          <Jumbotron fluid className='text-light bg-dark'>
             <Container>
-               <h1>MERN Stack Book Search</h1>
+               <h1>Google Book Search</h1>
 
                <Form onSubmit={handleFormSubmit}>
                   <Form.Row>

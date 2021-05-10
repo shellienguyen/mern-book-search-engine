@@ -12,6 +12,8 @@
     "bootstrap": "^4.4.1",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.12.4",
+    "if-env": "^1.0.4",
+    "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",

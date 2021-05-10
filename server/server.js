@@ -13,7 +13,7 @@ const server = new ApolloServer({
    typeDefs,
    resolvers,
    context: authMiddleware
-})
+});
 
 server.applyMiddleware({ app });
 app.use( express.urlencoded({ extended: true }));
@@ -30,9 +30,9 @@ if ( process.env.NODE_ENV === 'production' ) {
  
 app.use( routes );
 
-db.once('open', () => {
-   app.listen(PORT, () => {
-     console.log(`API server running on port ${PORT}!`);
+db.once( 'open', () => {
+   app.listen( PORT, () => {
+     console.log( `API server running on port ${PORT}!` );
 
      // Consold log the location to test our gql API
      console.log( `Use GraphQL at http://localhost:${PORT}${server.graphqlPath}` );
