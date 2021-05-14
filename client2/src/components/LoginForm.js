@@ -18,6 +18,9 @@ const LoginForm = () => {
       console.log( 'LoginForm.js handleInputChange' );
 
       setUserFormData({ ...userFormData, [ name ]: value });
+
+      console.log( 'name: ' + name );
+      console.log( 'value: ' + value );
    };
 
    
@@ -30,7 +33,7 @@ const LoginForm = () => {
       
       try {
          console.log( 'LoginForm.js inside try' );
-
+//debugger;
          const { data } = await loginUser({ variables: { ...userFormData }});
 
          console.log( data );

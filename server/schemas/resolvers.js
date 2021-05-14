@@ -1,93 +1,81 @@
-const { Book, User } = require( '../models' );
-const { AuthenticationError } = require( 'apollo-server-express' );
-const { signToken } = require( '../utils/auth' );
-
+const { User, Book } = require("../models");
+const { AuthenticationError } = require("apollo-server-express");
+const { signToken } = require("../utils/auth");
+// const { param } = require('../routes');
 
 const resolvers = {
-   Query: {
-      // Retrieve a user using username
-      me: async( parent, args, context ) => {
-         if ( context.user ) {
-            const userData = await User.findOne({})
-               .select( '-__v -password' )
-               .populate( 'books' )
+  Query: {
+    //get a user by username
+    me: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({})
+          .select("-__v -password")
+          .populate("books");
 
-               return userData;
-         };
-
-         throw new AuthenticationError( 'User is not logged in!' );
+        return userData;
       }
-   },
-   /* Upon successful operation, a token is generated.  After receiving this token,
-   the client can continue to send it with any other requests. The back end will
-   then decode the token and know exactly who was making the request, because all
-   of the user's information is saved on the token itself. */
-   Mutation: {
-      addUser: async( parent, args ) => {
-         const user = await User.create( args );
-         const token = signToken( user );
 
-         return { token, user };
-      },
-      login: async( parent, { email, password } ) => {
-         console.log( 'resolvers.js' );
+      throw new AuthenticationError("Not logged in");
+    },
+  },
 
-         const user = await User.findOne({ email });
+  Mutation: {
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
+      const token = signToken(user);
 
-         console.log( 'resolvers.js' );
-         console.log( 'email: ' + email );
-         console.log( 'password: ' + password );
+      return { token, user };
+    },
 
-         if ( !user ) {
-            console.log( 'resolvers.js if( !user )' );
-            throw new AuthenticationError( 'Incorrect credentials deteced!' );
-         };
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
 
-         const correctPassword = await user.isCorrectPassword( password );
-
-         console.log( 'correctPassword: ' );
-         console.log( correctPassword );
-
-         if ( !correctPassword ) {
-            console.log( 'resolvers.js if( !correctPassword )' );
-            throw new AuthenticationError( 'Incorrect credentials detected!' );
-         };
-
-         const token = signToken( user );
-
-         console.log( 'resolvers.js' );
-         console.log( 'token: ' + token );
-
-         return { token, user };
-      },
-      saveBook: async( parent, args, context ) => {
-         if ( context.user ) {
-            const updatedUser = await User.findByIdAndUpdate(
-               { _id: context.user._id },
-               { $addToSet: { savedBooks: args.input }},
-               { new: true }
-            );
-
-            return updatedUser;
-         };
-
-         throw new AuthenticationError( 'User must be logged in!' );
-      },
-      removeBook: async( parent, args, context ) => {
-         if ( context.user ) {
-            const updatedUser = await User.findOneAndUpdate (
-               { _id: context.user._id },
-               { $pull: { savedBooks: { bookId: args. bookId }}},
-               { new: true } 
-            );
-
-            return updatedUser;
-         };
-
-         throw new AuthenticationError( 'User must be logged in!' );
+      if (!user) {
+        throw new AuthenticationError("Incorrect credentials");
       }
-   }
+
+      const correctPw = await user.isCorrectPassword(password);
+
+      if (!correctPw) {
+        throw new AuthenticationError("Incorrect credentials");
+      }
+
+      const token = signToken(user);
+      return { token, user };
+    },
+
+    saveBook: async (parent, args, context) => {
+        console.log( 'resolvers.js saveBook' );
+        console.log( context.user );
+      if (context.user) {
+        const savedBook = await Book.create({ ...args, username: context.user.username });
+
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { savedBooks: args.input } },
+          { new: true }
+        );
+
+        return updatedUser;
+      }
+
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+    removeBook: async (parent, args, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: { bookId: args.bookId } } },
+          { new: true }
+        );
+
+        return updatedUser;
+      }
+
+      throw new AuthenticationError("You need to be logged in!");
+    },
+  },
 };
-
 
 module.exports = resolvers;

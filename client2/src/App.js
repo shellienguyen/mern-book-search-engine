@@ -11,7 +11,8 @@ const client = new ApolloClient({
    request: operation => {
       const token = localStorage.getItem( 'id_token' );
 
-      console.log( 'token in apps.js: ' + token );
+      console.log( 'App.js' );
+      console.log( 'token apps.js: ' + token );
 
       operation.setContext({
          headers: {
