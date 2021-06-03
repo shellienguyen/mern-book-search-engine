@@ -14,35 +14,21 @@ const LoginForm = () => {
 
    const handleInputChange = ( event ) => {
       const { name, value } = event.target;
-
-      console.log( 'LoginForm.js handleInputChange' );
-
       setUserFormData({ ...userFormData, [ name ]: value });
    };
-
    
    const handleFormSubmit = async ( event ) => {
       event.preventDefault();
 
-      console.log( 'LoginForm.js before try' );
-      console.log( 'validated: ' );
-      console.log( validated );
-      
       try {
-         console.log( 'LoginForm.js inside try' );
-
-         const { data } = await loginUser({ variables: { ...userFormData }});
-
-         console.log( data );
-         console.log( data.login.token );
-
-         Auth.login( data.login.token );
+         const mutationResponse = await loginUser({
+            variables: { email: userFormData.email, password: userFormData.password },
+          });
+    
+         Auth.login( mutationResponse.data.login.token );
       }
       catch ( err ) {
-         console.log( 'LoginForm.js catch' );
-
          console.error( err );
-         //setShowAlert( true );
       };
 
       setUserFormData({ username: '', email: '', password: '', });

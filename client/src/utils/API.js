@@ -19,10 +19,6 @@ export const createUser = ( userData ) => {
 };
 
 export const loginUser = ( userData ) => {
-
-   console.log( 'API.js' );
-   console.log( userData );
-
    return fetch( '/api/users/login', {
       method: 'POST',
       headers: {
@@ -34,7 +30,6 @@ export const loginUser = ( userData ) => {
 
 // save book data for a logged in user
 export const saveBook = ( bookData, token ) => {
-   console.log( 'blah' );
    return fetch( '/api/users', {
       method: 'PUT',
       headers: {
