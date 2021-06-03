@@ -13,4 +13,5 @@ stack, Apollo Server, Apollo Provider, Express.js, MongoDB, Node, and React.
 
 ## How This Application Works:
 
-<br><br>![Mockup](https://github.com/shellienguyen/mern-book-search-engine/blob/main/src/img/app-demo.gif)
+<br>![Mockup](https://github.com/shellienguyen/mern-book-search-engine/blob/main/public/assets/images/sn-google-book-search-signup.gif)<br><br>
+<br>![Mockup](https://github.com/shellienguyen/mern-book-search-engine/blob/main/public/assets/images/sn-google-book-search.gif)<br><br>
